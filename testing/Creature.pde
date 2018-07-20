@@ -13,14 +13,14 @@ class Creature
   
   final int healthBarWidth = 20;
   
-  final int DeathCounter = 40;
+  final int DeathCounter = 100;
   
   int stepsToDeath;
   
   Creature(int Height, int Width)
   {
     apetite = (int)random(3);
-    hunger = random(1);
+    hunger = random(.2,1);
     
     _height = Height;
     _width = Width;
@@ -107,7 +107,10 @@ class Creature
     else
     {
       nutrient = nutrient + hunger;
-      stepsToDeath = DeathCounter;
+      if(stepsToDeath < DeathCounter)
+      {
+        stepsToDeath += 5;
+      }
     }
     return result;
   }
@@ -205,12 +208,14 @@ class Creature
     if((float)stepsToDeath/(float)DeathCounter != 0)
     {
       greenWidth = int(healthBarWidth * ((float)stepsToDeath/(float)DeathCounter));
-      println(stepsToDeath + "/" + DeathCounter + "=" + (float)stepsToDeath/(float)DeathCounter);
-      println("greenWidth" + greenWidth);
     }
     else 
     {
       greenWidth = 1;
+    }
+    if(greenWidth > 20)
+    {
+      greenWidth = 20;
     }
     int redWidth = healthBarWidth - greenWidth;
     fill(0,256,0);

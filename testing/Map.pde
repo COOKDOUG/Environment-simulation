@@ -52,6 +52,10 @@ class Map
   
   void Tick()
   {
+    if(creatures.size() == 0)
+    {
+      PopulateMap();
+    }
     Creature animal;
     ArrayList<Creature> creaturesHolder = new ArrayList<Creature>();
     for(int i = 0; i < creatures.size(); i ++)
