@@ -6,7 +6,7 @@ class Map
   static final int NumOfCreatures = 15;
   Cell[][] area;
   
-  Creature[] creatures;
+  ArrayList<Creature> creatures;
   
   void PopulateMap()
   {
@@ -19,10 +19,10 @@ class Map
       }
     }
     
-    creatures = new Creature[NumOfCreatures];
+    creatures = new ArrayList<Creature>();
     for(int i = 0; i < NumOfCreatures; i ++)
     {
-      creatures[i] = new Creature(int(random(Height)), int(random(Width)));
+      creatures.add(new Creature(int(random(Height)), int(random(Width))));
     }
   }
   
@@ -36,11 +36,13 @@ class Map
       }
     }
     
-    for(int i = 0; i < NumOfCreatures; i ++)
+    Creature animal;
+    for(int i = 0; i < creatures.size(); i ++)
     {
-      if(creatures[i] != null)
+      animal = creatures.get(i);
+      if(animal != null)
       {
-        creatures[i].Draw();
+        animal.Draw();
       }
     }
   }
@@ -53,14 +55,16 @@ class Map
   
   void Tick()
   {
-    for(int i = 0; i < NumOfCreatures; i ++)
+    Creature animal;
+    for(int i = 0; i < creatures.size(); i ++)
     {
-      if(creatures[i] != null)
+      animal = creatures.get(i);
+      if(animal != null)
       {
-        creatures[i].Tick(area[creatures[i]._height][creatures[i]._width]);
-        if(creatures[i].isDead() && creatures[i].nutrient==0)
+        animal.Tick(area[animal._height][animal._width]);
+        if(animal.isDead() && animal.nutrient==0)
         {
-          creatures[i] = null;
+          creatures.remove(i);
         }
       }
     }
@@ -100,7 +104,7 @@ class Map
     }
     println("actually spilling");
     float amountToSpill = overflowingCell.TotalNutrients() - overflowingCell.maxNutrients;
-    
+    overflowingCell.RemoveNutrients(amountToSpill);
     Cell cell;
     for(int i = 0; i < cellList.size(); i ++)
     {

@@ -58,4 +58,40 @@ class Cell
       }
     }
   }
+  
+  void RemoveNutrients(float removeAmount)
+  {
+    float removePart;
+    
+    if(removeAmount > 1)
+    {
+      removePart = random(removeAmount);
+    }
+    else
+    {
+      removePart = removeAmount;
+    }
+    switch(int(random(3)))
+    {
+      case 0:
+        if(removePart < nutrientA)
+        {
+          nutrientA -= removePart;
+        }
+      break;
+      case 1:
+        if(removePart < nutrientB)
+        {
+          nutrientB -= removePart;
+        }
+      break;
+      case 2:
+        if(removePart < nutrientC)
+        {
+          nutrientC -= removePart;
+        }
+      break;
+    }
+    removeAmount -= removePart;
+  }
 }
