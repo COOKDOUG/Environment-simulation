@@ -1,19 +1,16 @@
 class Map
 {
-  static final int Height = 160;
-  static final int Width = 100;
-  static final int CellSize = 10;
-  static final int NumOfCreatures = 15;
+  static final int NumOfCreatures = 100;
   Cell[][] area;
   
   ArrayList<Creature> creatures;
   
   void PopulateMap()
   {
-    area = new Cell[Height][Width];
-    for(int i = 0;i<Height;i++)
+    area = new Cell[MapValues.Height][MapValues.Width];
+    for(int i = 0;i<MapValues.Height;i++)
     {
-      for(int j = 0; j<Width; j++)
+      for(int j = 0; j<MapValues.Width; j++)
       {
         area[i][j] = new Cell();
       }
@@ -22,15 +19,15 @@ class Map
     creatures = new ArrayList<Creature>();
     for(int i = 0; i < NumOfCreatures; i ++)
     {
-      creatures.add(new Creature(int(random(Height)), int(random(Width))));
+      creatures.add(new Creature(int(random(MapValues.Height)), int(random(MapValues.Width))));
     }
   }
   
   void DrawMap()
   {
-    for(int i = 0;i<Height;i++)
+    for(int i = 0;i<MapValues.Height;i++)
     {
-      for(int j = 0; j<Width; j++)
+      for(int j = 0; j<MapValues.Width; j++)
       {
         DrawCell(area[i][j], i, j);
       }
@@ -50,15 +47,27 @@ class Map
   void DrawCell(Cell cell, int _height, int _width)
   {
     fill(cell.ToAlphaValue(cell.nutrientA), cell.ToAlphaValue(cell.nutrientB), cell.ToAlphaValue(cell.nutrientC));
-    rect((_height * CellSize) + CellSize /2, _width * CellSize+ CellSize /2,CellSize,CellSize);
+    rect((_height * MapValues.CellSize) + MapValues.CellSize /2, _width * MapValues.CellSize+ MapValues.CellSize /2,MapValues.CellSize,MapValues.CellSize);
   }
   
   void Tick()
   {
     Creature animal;
+    ArrayList<Creature> creaturesHolder = new ArrayList<Creature>();
     for(int i = 0; i < creatures.size(); i ++)
     {
       animal = creatures.get(i);
+      for(Creature compare : creatures)
+      {
+        if(compare._height == animal._height && compare._width == animal._width)
+        {
+          Creature breedHolder = animal.Breed(compare);
+          if(breedHolder != null)
+          {
+            creaturesHolder.add(breedHolder);
+          }
+        }
+      }
       if(animal != null)
       {
         animal.Tick(area[animal._height][animal._width]);
@@ -68,18 +77,23 @@ class Map
         }
       }
     }
+    for(Creature creature: creaturesHolder)
+    {
+      creatures.add(creature);
+    }
+    creaturesHolder.clear();
     
     for(int i = 0; i < 16; i++)
     {
-      int _height = int(random(Height));
-      int _width = int(random(Width));
+      int _height = int(random(MapValues.Height));
+      int _width = int(random(MapValues.Width));
       
       area[_height][_width].Grow();
     }
     
-    for(int i = 0;i<Height;i++)
+    for(int i = 0;i<MapValues.Height;i++)
     {
-      for(int j = 0; j<Width; j++)
+      for(int j = 0; j<MapValues.Width; j++)
       {
         SpillOver(area[i][j], GetSurroundingCells(i,j));
       }
@@ -102,7 +116,6 @@ class Map
     {
       return;
     }
-    println("actually spilling");
     float amountToSpill = overflowingCell.TotalNutrients() - overflowingCell.maxNutrients;
     overflowingCell.RemoveNutrients(amountToSpill);
     Cell cell;
@@ -128,9 +141,9 @@ class Map
   {
     ArrayList<Cell> cellList = new ArrayList<Cell>();
     
-    if((_height + 1) < Height)
+    if((_height + 1) < MapValues.Height)
     {
-      if((_width + 1) < Width)
+      if((_width + 1) < MapValues.Width)
       {
         cellList.add(area[_height + 1][_width + 1]);
       }
@@ -142,7 +155,7 @@ class Map
     }
     if((_height - 1) > -1)
     {
-      if((_width + 1) < Width)
+      if((_width + 1) < MapValues.Width)
       {
         cellList.add(area[_height - 1][_width + 1]);
       }
@@ -152,7 +165,7 @@ class Map
       }
       cellList.add(area[_height - 1][_width]);
     }
-    if((_width + 1) < Width)
+    if((_width + 1) < MapValues.Width)
     {
       cellList.add(area[_height][_width + 1]);
     }

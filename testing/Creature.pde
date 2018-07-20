@@ -13,7 +13,7 @@ class Creature
   
   final int healthBarWidth = 20;
   
-  final int DeathCounter = 200;
+  final int DeathCounter = 40;
   
   int stepsToDeath;
   
@@ -129,7 +129,7 @@ class Creature
         break;
           
         case 1: //move down
-          if(_height + 1 < Map.Height)
+          if(_height + 1 < MapValues.Height)
             {
               _height = _height +1;
             }
@@ -143,7 +143,7 @@ class Creature
         break;
         
         case 3:
-          if(_width + 1 < Map.Width)
+          if(_width + 1 < MapValues.Width)
             {
               _width = _width +1;
             }
@@ -171,7 +171,6 @@ class Creature
     float amountToAdd;
     if(nutrient < 1)
     {
-      println("nutrient less than 1 "+ nutrient);
       amountToAdd = nutrient;
       nutrient = 0;
     }
@@ -180,8 +179,6 @@ class Creature
       amountToAdd = nutrient * .3;
       nutrient = nutrient - amountToAdd;
     }
-    println("nutrient" + nutrient);
-    println("rotting " + amountToAdd);
     
     switch(int(random(3)))
     {
@@ -202,12 +199,14 @@ class Creature
   void Draw()
   {
     fill(color1, color2, color3);
-    ellipse(_height * Map.CellSize+ Map.CellSize /2, _width * Map.CellSize+ Map.CellSize /2, Map.CellSize-2, Map.CellSize-2);
+    ellipse(_height * MapValues.CellSize+ MapValues.CellSize /2, _width * MapValues.CellSize+ MapValues.CellSize /2, MapValues.CellSize-2, MapValues.CellSize-2);
     
     int greenWidth;
-    if(stepsToDeath/healthBarWidth != 0)
+    if((float)stepsToDeath/(float)DeathCounter != 0)
     {
-      greenWidth = stepsToDeath / (stepsToDeath/healthBarWidth);
+      greenWidth = int(healthBarWidth * ((float)stepsToDeath/(float)DeathCounter));
+      println(stepsToDeath + "/" + DeathCounter + "=" + (float)stepsToDeath/(float)DeathCounter);
+      println("greenWidth" + greenWidth);
     }
     else 
     {
@@ -215,17 +214,16 @@ class Creature
     }
     int redWidth = healthBarWidth - greenWidth;
     fill(0,256,0);
-    println(greenWidth);
     rectMode(CORNER);
-    rect(_height * Map.CellSize - (healthBarWidth / 4), (_width * Map.CellSize) - (Map.CellSize),greenWidth,6);
+    rect(_height * MapValues.CellSize - (healthBarWidth / 4), (_width * MapValues.CellSize) - (MapValues.CellSize),greenWidth,6);
     fill(256,0,0);
     if(!isDead())
     {
-      rect(_height * Map.CellSize - (healthBarWidth /4) + greenWidth, (_width * Map.CellSize) - (Map.CellSize),redWidth,6);
+      rect(_height * MapValues.CellSize - (healthBarWidth /4) + greenWidth, (_width * MapValues.CellSize) - (MapValues.CellSize),redWidth,6);
     }
     else
     {
-      rect(_height * Map.CellSize+ Map.CellSize /2 , (_width * Map.CellSize) - (Map.CellSize),healthBarWidth,6);
+      rect(_height * MapValues.CellSize - (healthBarWidth / 4), (_width * MapValues.CellSize) - (MapValues.CellSize),healthBarWidth,6);
     }
     rectMode(CENTER);
   }
@@ -233,5 +231,17 @@ class Creature
   boolean isDead()
   {
     return stepsToDeath <= 0;
+  }
+  
+  Creature Breed(Creature creature)
+  {
+    if(int(random(10000)) == 1)
+    {
+      return new Creature(creature._height, creature._width);
+    }
+    else 
+    {
+      return null;
+    }
   }
 }

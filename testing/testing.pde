@@ -6,6 +6,10 @@ void setup()
   fullScreen();
   rectMode(CENTER);
   ellipseMode(CENTER);
+  int cellSize = 10;
+  MapValues.Height = width/cellSize;
+  MapValues.Width = height / cellSize;
+  MapValues.CellSize = cellSize;
   mapHolder = new Map();
   mapHolder.PopulateMap();
 }
