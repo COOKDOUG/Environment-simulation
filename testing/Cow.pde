@@ -81,15 +81,15 @@ class Cow extends Creature implements ICreature
   
   void Init(int Height, int Width, int breedCooldown)
   {
-    apetite = (int)random(3); //<>//
-    hunger = random(.2,1); //<>//
-     //<>//
-    Set_height(Height); //<>//
+    apetite = (int)random(3);
+    hunger = random(.2,1);
+    
+    Set_height(Height);
     Set_width(Width);
-     //<>//
-    Set_color1(256);//round(random(256)); //<>//
-    Set_color2(256);//round(random(256)); //<>//
-    Set_color3(256);//round(random(256)); //<>//
+    
+    Set_color1(256);//round(random(256));
+    Set_color2(256);//round(random(256));
+    Set_color3(256);//round(random(256));
     
     Set_stepsToDeath(DeathCounter);
     Set_breedingCooldown(breedCooldown);
@@ -209,39 +209,95 @@ class Cow extends Creature implements ICreature
     }
     int direction = (int)random(4);
     switch(direction)
-      {
-        case 0://move up
-          if(_height - 1 >= 0)
-            {
-              _height = _height -1;
-            }
-        break;
-          
-        case 1: //move down
-          if(_height + 1 < MapValues.Height)
-            {
-              _height = _height +1;
-            }
-        break;
+    {
+      case 0://move up
+        if(_height - 1 >= 0)
+          {
+            _height = _height -1;
+          }
+      break;
         
-        case 2://move right
-        if(_width - 1 >= 0)
-            {
-              _width = _width -1;
-            }
-        break;
-        
-        case 3:
-          if(_width + 1 < MapValues.Width)
-            {
-              _width = _width +1;
-            }
-        break;
-      }
+      case 1: //move down
+        if(_height + 1 < MapValues.Height)
+          {
+            _height = _height +1;
+          }
+      break;
+      
+      case 2://move right
+      if(_width - 1 >= 0)
+          {
+            _width = _width -1;
+          }
+      break;
+      
+      case 3:
+        if(_width + 1 < MapValues.Width)
+          {
+            _width = _width +1;
+          }
+      break;
+    }
+    this.Nutrients.add(int(random(3)), -0.1);
+    _canEatHere = true;
   }
   
+  private void AdjustHealth()
+  {
+    for(int i = 0; i < 3; i ++)
+    {
+      boolean shouldAdd = false;
+      switch(i)
+      {
+        case 0:
+          if(this.Nutrients.get(i) >= this.A_Min_Healthy && this.Nutrients.get(i) <= this.A_Max_Healthy)
+          {
+            shouldAdd = true;
+          }
+          else
+          {
+            shouldAdd = false;
+          }
+        break;
+        case 1:
+          if(this.Nutrients.get(i) >= this.B_Min_Healthy && this.Nutrients.get(i) <= this.B_Max_Healthy)
+          {
+            shouldAdd = true;
+          }
+          else
+          {
+            shouldAdd = false;
+          }
+        break;
+        case 2:
+          if(this.Nutrients.get(i) >= this.C_Min_Healthy && this.Nutrients.get(i) <= this.C_Max_Healthy)
+          {
+            shouldAdd = true;
+          }
+          else
+          {
+            shouldAdd = false;
+          }
+        break;
+      }
+      if(shouldAdd)
+      {
+        this.CurrentHealth += 2;
+      }
+      else
+      {
+        this.CurrentHealth --;
+      }
+      if(this.CurrentHealth > this.MaxHealth)
+      {
+        this.CurrentHealth = this.MaxHealth;
+      }
+    }
+  }
+
   void Tick(Cell cell)
   {
+    this.AdjustHealth();
     if(!isDead())
     {
       if(breedingCooldown > 0)
@@ -300,9 +356,9 @@ class Cow extends Creature implements ICreature
     ellipse(_height * MapValues.CellSize+ MapValues.CellSize /2, _width * MapValues.CellSize+ MapValues.CellSize /2, MapValues.CellSize-2, MapValues.CellSize-2);
     
     int greenWidth;
-    if((float)stepsToDeath/(float)DeathCounter != 0)
+    if((float)CurrentHealth/(float)MaxHealth != 0)
     {
-      greenWidth = int(healthBarWidth * ((float)stepsToDeath/(float)DeathCounter));
+      greenWidth = int(healthBarWidth * ((float)CurrentHealth/(float)MaxHealth));
     }
     else 
     {
@@ -330,7 +386,7 @@ class Cow extends Creature implements ICreature
   
   boolean isDead()
   {
-    return stepsToDeath <= 0;
+    return CurrentHealth <= 0;
   }
   
   ICreature Breed(ICreature creature)

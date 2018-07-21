@@ -35,9 +35,8 @@ abstract class Plant
     {
       if(prodCD <= 0)
       {
-        if(true)//cell.CanAddNutrient(ResourceProduced))
+        if(cell.CanAddNutrient(ResourceProduced))
         {
-          println(ProductionAmount);
           cell.Nutrients.add(ResourceProduced, ProductionAmount);
           prodCD = ProductionCooldown;
         }

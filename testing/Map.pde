@@ -6,7 +6,7 @@ class Map
   
   ArrayList<ICreature> creatures; //<>//
   ArrayList<Plant> plants;
-   //<>// //<>//
+   //<>// //<>// //<>//
   void PopulateMap()
   { //<>//
     area = new Cell[MapValues.Height][MapValues.Width];
@@ -18,7 +18,7 @@ class Map
       }
     }
     
-    creatures = new ArrayList<ICreature>(); //<>// //<>//
+    creatures = new ArrayList<ICreature>(); //<>// //<>// //<>//
     for(int i = 0; i < NumOfCreatures; i ++)
     { //<>//
       int spawnHeight = int(random(MapValues.Height));
@@ -31,7 +31,6 @@ class Map
     {
       int spawnHeight = int(random(MapValues.Height));
       int spawnWidth = int(random(MapValues.Width));
-      println("Fern " + i + ": " + spawnHeight + "," + spawnWidth);
       plants.add(new Fern(spawnHeight, spawnWidth));
     }
   }
@@ -66,6 +65,7 @@ class Map
   
   void Tick()
   {
+    RunStatistics.Ticks ++;
     //if(creatures.size() == 0)
     //{
     //  PopulateMap();
@@ -156,7 +156,7 @@ class Map
     {
       return;
     }
-    Cell cell;
+    Cell cell; //<>//
     for(int i = 0; i < cellList.size(); i ++) //<>//
     {
       cell = cellList.get(i);

@@ -25,6 +25,7 @@ void draw()
 { 
   if(!isPaused)
   {
+    mapHolder.RunSimulation(20);
     mapHolder.Tick();
   }
   
@@ -71,4 +72,7 @@ void DrawStatistics()
 
   currentHeight += 60;
   text("Eat Amount :" + str(RunStatistics.EatAmount),width/8, currentHeight);
+  
+  currentHeight += 60;
+  text("Steps :" + str(RunStatistics.Ticks),width/8, currentHeight);
 }
