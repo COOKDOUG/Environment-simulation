@@ -74,6 +74,7 @@ class Cow extends Creature implements ICreature
   {
     Init(cow1.Get_height(),cow1.Get_width(), MapValues.BreedingCooldown);
     hunger = (cow1.Get_hunger() + cow2.Get_hunger()) / 2;
+    MoveCost = (cow1.MoveCost + cow2.MoveCost)/2f;
     Set_color1(int(random(128,250)));
     Set_color2(int(random(128,250)));
     Set_color3(int(random(128,250)));
@@ -109,6 +110,7 @@ class Cow extends Creature implements ICreature
 
     MaxHealth = 200;
     CurrentHealth = MaxHealth;
+    MoveCost = random(0.01, 0.15);
   }
   
   public <T extends Creature> T NewCreature(int Height, int Width, int breedCooldown)
@@ -238,7 +240,7 @@ class Cow extends Creature implements ICreature
           }
       break;
     }
-    this.Nutrients.add(int(random(3)), -0.1);
+    this.Nutrients.add(int(random(3)), -1 * MoveCost);
     _canEatHere = true;
   }
   

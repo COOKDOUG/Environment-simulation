@@ -1,14 +1,14 @@
 class Map
 {
-  static final int NumOfCreatures = 30;
+  static final int NumOfCreatures = 60;
   static final int NumOfPlants = 15;
   Cell[][] area;
   
-  ArrayList<ICreature> creatures; //<>//
+  ArrayList<ICreature> creatures; 
   ArrayList<Plant> plants;
-   //<>// //<>// //<>//
+      
   void PopulateMap()
-  { //<>//
+  { 
     area = new Cell[MapValues.Height][MapValues.Width];
     for(int i = 0;i<MapValues.Height;i++)
     {
@@ -18,9 +18,9 @@ class Map
       }
     }
     
-    creatures = new ArrayList<ICreature>(); //<>// //<>// //<>//
+    creatures = new ArrayList<ICreature>();    
     for(int i = 0; i < NumOfCreatures; i ++)
-    { //<>//
+    { 
       int spawnHeight = int(random(MapValues.Height));
       int spawnWidth = int(random(MapValues.Width));
       creatures.add(new Cow(spawnHeight, spawnWidth));
@@ -59,7 +59,7 @@ class Map
   
   void DrawCell(Cell cell, int _height, int _width)
   {
-    fill(cell.ToAlphaValue(cell.Nutrients.get(Constants.NutrientA)), cell.ToAlphaValue(cell.Nutrients.get(Constants.NutrientB)), cell.ToAlphaValue(cell.Nutrients.get(Constants.NutrientC)));
+    fill(cell.ToAlphaValue(Constants.NutrientA), cell.ToAlphaValue(Constants.NutrientB), cell.ToAlphaValue(Constants.NutrientC));
     rect((_height * MapValues.CellSize) + MapValues.CellSize /2, _width * MapValues.CellSize+ MapValues.CellSize /2,MapValues.CellSize,MapValues.CellSize);
   }
   
@@ -156,12 +156,12 @@ class Map
     {
       return;
     }
-    Cell cell; //<>//
-    for(int i = 0; i < cellList.size(); i ++) //<>//
+    Cell cell; 
+    for(int i = 0; i < cellList.size(); i ++)  
     {
       cell = cellList.get(i);
 
-      cell.Nutrients.add(overflowingNutrient,  amountToSpill * ((float)1/((float)cellList.size()*2))); //<>//
+      cell.Nutrients.add(overflowingNutrient,  amountToSpill * ((float)1/((float)cellList.size()*2))); 
     }
   }
   

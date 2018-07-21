@@ -42,10 +42,9 @@ class Cell
     maxNutrientsHolder = 0;
   }
   
-  int ToAlphaValue(float nutrient)
+  int ToAlphaValue(int nutrient)
   {
-    float returnHolder = 256 * nutrient;
-    return round(returnHolder / Total_Max_Nutrients());
+    return int(200 * (this.Nutrients.get(nutrient) / this.MaxNutrients.get(nutrient)));
   }
   
   float TotalNutrients()

@@ -70,4 +70,6 @@ abstract class Creature implements ICreature
 
   int MaxHealth;
   int CurrentHealth;
+  
+  float MoveCost;
 }
