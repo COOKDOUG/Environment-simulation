@@ -25,7 +25,7 @@ void draw()
 { 
   if(!isPaused)
   {
-    mapHolder.RunSimulation(10);
+    // mapHolder.RunSimulation(10);
     mapHolder.Tick();
   }
   
@@ -65,6 +65,11 @@ void DrawStatistics()
   text("Births :" + str(RunStatistics.Births) + "/" + str(RunStatistics.BirthChances),width/8, currentHeight);  
   
   currentHeight += 60;
-  textFont(f,30);
   text("Deaths :" + str(RunStatistics.Deaths),width/8, currentHeight);
+
+  currentHeight += 60;
+  text("Poop Amount :" + str(RunStatistics.PoopAmount),width/8, currentHeight);
+
+  currentHeight += 60;
+  text("Eat Amount :" + str(RunStatistics.EatAmount),width/8, currentHeight);
 }

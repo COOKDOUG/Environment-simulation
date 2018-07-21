@@ -4,9 +4,7 @@ class Cell
   
   FloatList Nutrients;
   
-  final int NutrientA = 0;
-  final int NutrientB = 1;
-  final int NutrientC = 2;
+  
   
   Cell()
   {
@@ -48,17 +46,17 @@ class Cell
     {
       if(TotalNutrients() <= maxNutrients)
       {
-        if (Nutrients.get(NutrientA) > Nutrients.get(NutrientB) && Nutrients.get(NutrientA) > Nutrients.get(NutrientC))
+        if (Nutrients.get(Constants.NutrientA) > Nutrients.get(Constants.NutrientB) && Nutrients.get(Constants.NutrientA) > Nutrients.get(Constants.NutrientC))
         {
-          Nutrients.set(NutrientA, Nutrients.get(NutrientA) + (Nutrients.get(NutrientA) * .5)) ;
+          Nutrients.set(Constants.NutrientA, Nutrients.get(Constants.NutrientA) + (Nutrients.get(Constants.NutrientA) * .5)) ;
         }
-        else if (Nutrients.get(NutrientB) > Nutrients.get(NutrientA) && Nutrients.get(NutrientB) > Nutrients.get(NutrientC))
+        else if (Nutrients.get(Constants.NutrientB) > Nutrients.get(Constants.NutrientA) && Nutrients.get(Constants.NutrientB) > Nutrients.get(Constants.NutrientC))
         {
-          Nutrients.set(NutrientB, Nutrients.get(NutrientB) + (Nutrients.get(NutrientB) * .5));
+          Nutrients.set(Constants.NutrientB, Nutrients.get(Constants.NutrientB) + (Nutrients.get(Constants.NutrientB) * .5));
         }
-        else if (Nutrients.get(NutrientC) > Nutrients.get(NutrientB) && Nutrients.get(NutrientC) > Nutrients.get(NutrientA))
+        else if (Nutrients.get(Constants.NutrientC) > Nutrients.get(Constants.NutrientB) && Nutrients.get(Constants.NutrientC) > Nutrients.get(Constants.NutrientA))
         {
-          Nutrients.set(NutrientC, Nutrients.get(NutrientC) + (Nutrients.get(NutrientC) * .5));
+          Nutrients.set(Constants.NutrientC, Nutrients.get(Constants.NutrientC) + (Nutrients.get(Constants.NutrientC) * .5));
         }
       }
     }
@@ -79,21 +77,21 @@ class Cell
     switch(int(random(3)))
     {
       case 0:
-        if(removePart < Nutrients.get(NutrientA))
+        if(removePart < Nutrients.get(Constants.NutrientA))
         {
-          Nutrients.set(NutrientA, Nutrients.get(NutrientA) - removePart);
+          Nutrients.set(Constants.NutrientA, Nutrients.get(Constants.NutrientA) - removePart);
         }
       break;
       case 1:
-        if(removePart < Nutrients.get(NutrientB))
+        if(removePart < Nutrients.get(Constants.NutrientB))
         {
-          Nutrients.set(NutrientB, Nutrients.get(NutrientB) - removePart);
+          Nutrients.set(Constants.NutrientB, Nutrients.get(Constants.NutrientB) - removePart);
         }
       break;
       case 2:
-        if(removePart < Nutrients.get(NutrientC))
+        if(removePart < Nutrients.get(Constants.NutrientC))
         {
-          Nutrients.set(NutrientC, Nutrients.get(NutrientC) - removePart);
+          Nutrients.set(Constants.NutrientC, Nutrients.get(Constants.NutrientC) - removePart);
         }
       break;
     }

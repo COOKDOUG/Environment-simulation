@@ -4,8 +4,12 @@ interface ICreature
     void Set_apetite(int value);
     float Get_hunger();
     void Set_hunger(float value);
-    float Get_nutrient();
-    void Set_nutrient(float value);
+    
+    FloatList Get_nutrients();
+    void Set_Nutrients(FloatList value);
+    void Set_nutrients_value(int index, float value);
+    void Add_nutrients(int index, float value);
+    float Get_Total_Nutrients();
     
     int Get_height();
     void Set_height(int value);
@@ -28,7 +32,7 @@ interface ICreature
   
     int DeathCounter = 100;
 
-    public <T extends ICreature> T NewCreature(int Height, int Width, int breedingCD);
+     <T extends ICreature> T NewCreature(int Height, int Width, int breedingCD);
     boolean Eat(Cell cell);
     void Move();
     void Tick(Cell cell);
@@ -42,7 +46,7 @@ class Creature
 {
   int apetite;
   float hunger;
-  float nutrient;
+  FloatList Nutrients;
   
   int _height;
   int _width;

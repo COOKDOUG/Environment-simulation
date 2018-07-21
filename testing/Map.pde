@@ -6,7 +6,7 @@ class Map
   ArrayList<ICreature> creatures; //<>//
   
   void PopulateMap()
-  {
+  { //<>//
     area = new Cell[MapValues.Height][MapValues.Width];
     for(int i = 0;i<MapValues.Height;i++)
     {
@@ -18,10 +18,10 @@ class Map
     
     creatures = new ArrayList<ICreature>();
     for(int i = 0; i < NumOfCreatures; i ++)
-    {
+    { //<>//
       int spawnHeight = int(random(MapValues.Height));
       int spawnWidth = int(random(MapValues.Width));
-      creatures.add(new Cow(spawnHeight, spawnWidth, MapValues.BreedingCooldown));
+      creatures.add(new Cow(spawnHeight, spawnWidth));
     }
   }
   
@@ -48,7 +48,7 @@ class Map
   
   void DrawCell(Cell cell, int _height, int _width)
   {
-    fill(cell.ToAlphaValue(cell.Nutrients.get(cell.NutrientA)), cell.ToAlphaValue(cell.Nutrients.get(cell.NutrientB)), cell.ToAlphaValue(cell.Nutrients.get(cell.NutrientC)));
+    fill(cell.ToAlphaValue(cell.Nutrients.get(Constants.NutrientA)), cell.ToAlphaValue(cell.Nutrients.get(Constants.NutrientB)), cell.ToAlphaValue(cell.Nutrients.get(Constants.NutrientC)));
     rect((_height * MapValues.CellSize) + MapValues.CellSize /2, _width * MapValues.CellSize+ MapValues.CellSize /2,MapValues.CellSize,MapValues.CellSize);
   }
   
@@ -83,7 +83,7 @@ class Map
       if(animal != null)
       {
         ((ICreature)animal).Tick(area[animal.Get_height()][animal.Get_width()]);
-        if(((ICreature)animal).isDead() && animal.Get_nutrient()==0)
+        if(((ICreature)animal).isDead() && animal.Get_Total_Nutrients()==0)
         {
           RunStatistics.Deaths += 1;
           creatures.remove(i);
@@ -138,13 +138,13 @@ class Map
       switch(int(random(3)))
       {
         case 0:
-        cell.Nutrients.set(cell.NutrientA, cell.Nutrients.get(cell.NutrientA) + amountToSpill * (1/cellList.size()));
+        cell.Nutrients.set(Constants.NutrientA, cell.Nutrients.get(Constants.NutrientA) + amountToSpill * (1/cellList.size()));
         break;
         case 1:
-        cell.Nutrients.set(cell.NutrientB, cell.Nutrients.get(cell.NutrientB) + amountToSpill * (1/cellList.size()));
+        cell.Nutrients.set(Constants.NutrientB, cell.Nutrients.get(Constants.NutrientB) + amountToSpill * (1/cellList.size()));
         break;
         case 2:
-        cell.Nutrients.set(cell.NutrientC, cell.Nutrients.get(cell.NutrientC) + amountToSpill * (1/cellList.size()));
+        cell.Nutrients.set(Constants.NutrientC, cell.Nutrients.get(Constants.NutrientC) + amountToSpill * (1/cellList.size()));
         break;
       }
     }
