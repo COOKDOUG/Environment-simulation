@@ -19,7 +19,7 @@ class Map
     creatures = new ArrayList<Creature>();
     for(int i = 0; i < NumOfCreatures; i ++)
     {
-      creatures.add(new Creature(int(random(MapValues.Height)), int(random(MapValues.Width))));
+      creatures.add(new Creature(int(random(MapValues.Height)), int(random(MapValues.Width)), MapValues.BreedingCooldown));
     }
   }
   
@@ -56,19 +56,25 @@ class Map
     {
       PopulateMap();
     }
+
     Creature animal;
+    Creature compare;
     ArrayList<Creature> creaturesHolder = new ArrayList<Creature>();
     for(int i = 0; i < creatures.size(); i ++)
     {
       animal = creatures.get(i);
-      for(Creature compare : creatures)
+      for(int j = 0; j < creatures.size(); j ++)
       {
-        if(compare._height == animal._height && compare._width == animal._width)
+        if (j != i)
         {
-          Creature breedHolder = animal.Breed(compare);
-          if(breedHolder != null)
+          compare = creatures.get(j);
+          if(compare._height == animal._height && compare._width == animal._width)
           {
-            creaturesHolder.add(breedHolder);
+            Creature breedHolder = animal.Breed(compare);
+            if(breedHolder != null)
+            {
+              creaturesHolder.add(breedHolder);
+            }
           }
         }
       }
@@ -77,6 +83,7 @@ class Map
         animal.Tick(area[animal._height][animal._width]);
         if(animal.isDead() && animal.nutrient==0)
         {
+          RunStatistics.Deaths += 1;
           creatures.remove(i);
         }
       }

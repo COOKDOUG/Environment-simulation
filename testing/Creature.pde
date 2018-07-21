@@ -16,8 +16,9 @@ class Creature
   final int DeathCounter = 100;
   
   int stepsToDeath;
+  int breedingCooldown;
   
-  Creature(int Height, int Width)
+  Creature(int Height, int Width, int breedCooldown)
   {
     apetite = (int)random(3);
     hunger = random(.2,1);
@@ -30,6 +31,7 @@ class Creature
     color3 = 256;//round(random(256));
     
     stepsToDeath = DeathCounter;
+    breedingCooldown = breedCooldown;
   }
   
   int GetHeight()
@@ -158,6 +160,10 @@ class Creature
   {
     if(!isDead())
     {
+      if(breedingCooldown > 0)
+      {
+        breedingCooldown --;
+      }
       if(!Eat(cell))
       {
         Move();
@@ -240,13 +246,17 @@ class Creature
   
   Creature Breed(Creature creature)
   {
-    if(int(random(10000)) == 1)
+    if(breedingCooldown == 0)
     {
-      return new Creature(creature._height, creature._width);
+      RunStatistics.BirthChances += 1;
+      if(int(random(20)) == 1)
+      {
+        breedingCooldown = MapValues.BreedingCooldown;
+        RunStatistics.Births += 1;
+        return new Creature(creature._height, creature._width, MapValues.BreedingCooldown);
+      }
     }
-    else 
-    {
-      return null;
-    }
+    
+    return null;
   }
 }
