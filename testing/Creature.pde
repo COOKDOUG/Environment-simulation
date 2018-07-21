@@ -69,9 +69,7 @@ class Cow extends Creature implements ICreature
   }
   
   public <T extends ICreature> T NewCreature(int Height, int Width, int breedCooldown) //<>//
-  { //<>//
-    println("Height " + Height); //<>//
-    println("Width " + Width); //<>//
+  { //<>// //<>// //<>//
     Cow holder = new Cow(); //<>//
     holder.apetite = (int)random(3); //<>//
     holder.hunger = random(.2,1);
@@ -88,6 +86,35 @@ class Cow extends Creature implements ICreature
     return (T)holder;
   }
   
+  void Poop(Cell cell)
+  {
+    if(isDead())
+    {return;}
+    
+    if(hunger * 25 < nutrient)
+    {
+      if(int(random(10)) != 1)
+      {return;}
+      switch(apetite)
+      {
+        case 0:
+          cell.Nutrients.set(cell.NutrientB, cell.Nutrients.get(cell.NutrientB) + (nutrient/4));
+          nutrient = 2 * (nutrient/3);
+          break;
+      case 1:
+          cell.Nutrients.set(cell.NutrientC, cell.Nutrients.get(cell.NutrientC) + (nutrient/4));
+          nutrient = 2 * (nutrient/3);
+          break;
+      case 2:
+          cell.Nutrients.set(cell.NutrientA, cell.Nutrients.get(cell.NutrientA) + (nutrient/4));
+          nutrient = 2 * (nutrient/3);
+          break;
+      default:
+      break;
+      }
+    }
+  }
+  
   boolean Eat(Cell cell)
   {
     if (isDead())
@@ -98,13 +125,9 @@ class Cow extends Creature implements ICreature
     switch(apetite)
     {
       case 0:
-        if(cell.nutrientA > hunger)
+        if(cell.Nutrients.get(cell.NutrientA) > hunger)
         {
-          cell.nutrientA = cell.nutrientA - hunger;
-          if(cell.TotalNutrients() + (hunger/2) < cell.maxNutrients)
-          {
-            cell.nutrientB = cell.nutrientB + (hunger/2);
-          }
+          cell.Nutrients.set(cell.NutrientA, cell.Nutrients.get(cell.NutrientA) - hunger);
           result = true;
         }
         else
@@ -113,13 +136,9 @@ class Cow extends Creature implements ICreature
         }
         break;
     case 1:
-      if(cell.nutrientB > hunger)
+      if(cell.Nutrients.get(cell.NutrientB) > hunger)
         {
-          cell.nutrientB = cell.nutrientB - hunger;
-          if(cell.TotalNutrients() + (hunger/2) < cell.maxNutrients)
-          {
-            cell.nutrientC = cell.nutrientC + (hunger/2);
-          }
+          cell.Nutrients.set(cell.NutrientB, cell.Nutrients.get(cell.NutrientB) - hunger);
           result = true;
         }
         else
@@ -128,13 +147,9 @@ class Cow extends Creature implements ICreature
         }
         break;
     case 2:
-      if(cell.nutrientC > hunger)
+      if(cell.Nutrients.get(cell.NutrientC) > hunger)
         {
-          cell.nutrientC = cell.nutrientC - hunger;
-          if(cell.TotalNutrients() + (hunger/2) < cell.maxNutrients)
-          {
-            cell.nutrientA = cell.nutrientA + (hunger/2);
-          }
+          cell.Nutrients.set(cell.NutrientC, cell.Nutrients.get(cell.NutrientC) - hunger);
           result = true;
         }
         else
@@ -208,7 +223,11 @@ class Cow extends Creature implements ICreature
       {
         breedingCooldown --;
       }
-      if(!Eat(cell))
+      if(Eat(cell))
+      {
+        Poop(cell);
+      }
+      else
       {
         Move();
       }
@@ -236,15 +255,15 @@ class Cow extends Creature implements ICreature
     switch(apetite)
     {
       case 0:
-        cell.nutrientC += amountToAdd;
+        cell.Nutrients.set(cell.NutrientC, cell.Nutrients.get(cell.NutrientC)+ amountToAdd);
         break;
       
       case 1:
-        cell.nutrientA += amountToAdd;
+        cell.Nutrients.set(cell.NutrientA, cell.Nutrients.get(cell.NutrientA)+ amountToAdd);
         break;
       
       case 2:
-        cell.nutrientB += amountToAdd;
+        cell.Nutrients.set(cell.NutrientB, cell.Nutrients.get(cell.NutrientB)+ amountToAdd);
         break;
     }
   }

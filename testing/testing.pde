@@ -7,6 +7,7 @@ PFont f;
 void setup()
 {
   fullScreen();
+  frameRate(144);
   rectMode(CENTER);
   ellipseMode(CENTER);
   int cellSize = 10;
@@ -24,7 +25,7 @@ void draw()
 { 
   if(!isPaused)
   {
-    //mapHolder.RunSimulation(10);
+    mapHolder.RunSimulation(10);
     mapHolder.Tick();
   }
   

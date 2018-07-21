@@ -21,7 +21,6 @@ class Map
     {
       int spawnHeight = int(random(MapValues.Height));
       int spawnWidth = int(random(MapValues.Width));
-      println("Spawn Location:" + spawnHeight + "," + spawnWidth);
       creatures.add(new Cow(spawnHeight, spawnWidth, MapValues.BreedingCooldown));
     }
   }
@@ -49,7 +48,7 @@ class Map
   
   void DrawCell(Cell cell, int _height, int _width)
   {
-    fill(cell.ToAlphaValue(cell.nutrientA), cell.ToAlphaValue(cell.nutrientB), cell.ToAlphaValue(cell.nutrientC));
+    fill(cell.ToAlphaValue(cell.Nutrients.get(cell.NutrientA)), cell.ToAlphaValue(cell.Nutrients.get(cell.NutrientB)), cell.ToAlphaValue(cell.Nutrients.get(cell.NutrientC)));
     rect((_height * MapValues.CellSize) + MapValues.CellSize /2, _width * MapValues.CellSize+ MapValues.CellSize /2,MapValues.CellSize,MapValues.CellSize);
   }
   
@@ -139,13 +138,13 @@ class Map
       switch(int(random(3)))
       {
         case 0:
-        cell.nutrientA += amountToSpill * (1/cellList.size());
+        cell.Nutrients.set(cell.NutrientA, cell.Nutrients.get(cell.NutrientA) + amountToSpill * (1/cellList.size()));
         break;
         case 1:
-        cell.nutrientB += amountToSpill * (1/cellList.size());
+        cell.Nutrients.set(cell.NutrientB, cell.Nutrients.get(cell.NutrientB) + amountToSpill * (1/cellList.size()));
         break;
         case 2:
-        cell.nutrientC += amountToSpill * (1/cellList.size());
+        cell.Nutrients.set(cell.NutrientC, cell.Nutrients.get(cell.NutrientC) + amountToSpill * (1/cellList.size()));
         break;
       }
     }

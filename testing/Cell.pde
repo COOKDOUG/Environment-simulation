@@ -2,21 +2,21 @@ class Cell
 {
   float maxNutrients;
   
-  float nutrientA;
-  float nutrientB;
-  float nutrientC;  
+  FloatList Nutrients;
+  
+  final int NutrientA = 0;
+  final int NutrientB = 1;
+  final int NutrientC = 2;
   
   Cell()
   {
     maxNutrients = random(3,5);
-    
-    float firstGen = random(maxNutrients);
-    float secondGen = random(maxNutrients - firstGen);
-    float thirdGen = random(maxNutrients - (firstGen + secondGen));
-    
-    nutrientA = firstGen;
-    nutrientB = secondGen;
-    nutrientC = thirdGen;
+    Nutrients = new FloatList();
+    for(int i = 0; i < 3; i ++)
+    {
+      Nutrients.append(random(maxNutrients - TotalNutrients()));
+    }
+    Nutrients.shuffle();
   }
   
   int ToAlphaValue(float nutrient)
@@ -27,7 +27,12 @@ class Cell
   
   float TotalNutrients()
   {
-    return nutrientA + nutrientB + nutrientC;
+    float holder = 0;
+    for(float number : Nutrients)
+    {
+      holder = holder + number;
+    }
+    return holder;
   }
   
   boolean isOverflowing()
@@ -43,17 +48,17 @@ class Cell
     {
       if(TotalNutrients() <= maxNutrients)
       {
-        if (nutrientA > nutrientB && nutrientA > nutrientC)
+        if (Nutrients.get(NutrientA) > Nutrients.get(NutrientB) && Nutrients.get(NutrientA) > Nutrients.get(NutrientC))
         {
-          nutrientA = nutrientA + (nutrientA * .5);
+          Nutrients.set(NutrientA, Nutrients.get(NutrientA) + (Nutrients.get(NutrientA) * .5)) ;
         }
-        else if (nutrientB > nutrientA && nutrientB > nutrientC)
+        else if (Nutrients.get(NutrientB) > Nutrients.get(NutrientA) && Nutrients.get(NutrientB) > Nutrients.get(NutrientC))
         {
-          nutrientB = nutrientB + (nutrientB * .5);
+          Nutrients.set(NutrientB, Nutrients.get(NutrientB) + (Nutrients.get(NutrientB) * .5));
         }
-        else if (nutrientC > nutrientB && nutrientC > nutrientA)
+        else if (Nutrients.get(NutrientC) > Nutrients.get(NutrientB) && Nutrients.get(NutrientC) > Nutrients.get(NutrientA))
         {
-          nutrientC = nutrientC + (nutrientC * .5);
+          Nutrients.set(NutrientC, Nutrients.get(NutrientC) + (Nutrients.get(NutrientC) * .5));
         }
       }
     }
@@ -74,21 +79,21 @@ class Cell
     switch(int(random(3)))
     {
       case 0:
-        if(removePart < nutrientA)
+        if(removePart < Nutrients.get(NutrientA))
         {
-          nutrientA -= removePart;
+          Nutrients.set(NutrientA, Nutrients.get(NutrientA) - removePart);
         }
       break;
       case 1:
-        if(removePart < nutrientB)
+        if(removePart < Nutrients.get(NutrientB))
         {
-          nutrientB -= removePart;
+          Nutrients.set(NutrientB, Nutrients.get(NutrientB) - removePart);
         }
       break;
       case 2:
-        if(removePart < nutrientC)
+        if(removePart < Nutrients.get(NutrientC))
         {
-          nutrientC -= removePart;
+          Nutrients.set(NutrientC, Nutrients.get(NutrientC) - removePart);
         }
       break;
     }
