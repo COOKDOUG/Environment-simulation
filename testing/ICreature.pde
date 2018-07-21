@@ -42,7 +42,7 @@ interface ICreature
     ICreature Breed(ICreature creature);
 }
 
-class Creature
+abstract class Creature implements ICreature
 {
   int apetite;
   float hunger;
