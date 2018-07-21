@@ -87,7 +87,6 @@ class Cow extends Creature implements ICreature
     Nutrients.append(0);
     Nutrients.append(0);
     Nutrients.append(0);
-    println("Nutrients size:" + Nutrients.size());
   }
   
   public <T extends ICreature> T NewCreature(int Height, int Width, int breedCooldown) //<>//

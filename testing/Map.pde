@@ -1,10 +1,12 @@
 class Map
 {
-  static final int NumOfCreatures = 100;
+  static final int NumOfCreatures = 30;
+  static final int NumOfPlants = 15;
   Cell[][] area;
   
   ArrayList<ICreature> creatures; //<>//
-  
+  ArrayList<Plant> plants;
+   //<>// //<>//
   void PopulateMap()
   { //<>//
     area = new Cell[MapValues.Height][MapValues.Width];
@@ -16,12 +18,21 @@ class Map
       }
     }
     
-    creatures = new ArrayList<ICreature>();
+    creatures = new ArrayList<ICreature>(); //<>// //<>//
     for(int i = 0; i < NumOfCreatures; i ++)
     { //<>//
       int spawnHeight = int(random(MapValues.Height));
       int spawnWidth = int(random(MapValues.Width));
       creatures.add(new Cow(spawnHeight, spawnWidth));
+    }
+    
+    plants = new ArrayList<Plant>();
+    for(int i = 0; i < NumOfPlants; i++)
+    {
+      int spawnHeight = int(random(MapValues.Height));
+      int spawnWidth = int(random(MapValues.Width));
+      println("Fern " + i + ": " + spawnHeight + "," + spawnWidth);
+      plants.add(new Fern(spawnHeight, spawnWidth));
     }
   }
   
@@ -35,14 +46,15 @@ class Map
       }
     }
     
-    ICreature animal;
-    for(int i = 0; i < creatures.size(); i ++)
+    
+    for(ICreature animal: creatures)
     {
-      animal = creatures.get(i);
-      if(animal != null)
-      {
-        ((Cow)animal).Draw();
-      }
+      animal.Draw();
+    }
+    
+    for (Plant plant : plants)
+    {
+      plant.Draw();
     }
   }
   
@@ -54,10 +66,10 @@ class Map
   
   void Tick()
   {
-    if(creatures.size() == 0)
-    {
-      PopulateMap();
-    }
+    //if(creatures.size() == 0)
+    //{
+    //  PopulateMap();
+    //}
 
     ICreature animal;
     ICreature compare;
@@ -96,11 +108,11 @@ class Map
     }
     creaturesHolder.clear();
     
-    for(int i = 0; i < 16; i++)
+    for(int i = 0; i < (MapValues.Height * MapValues.Width / 100); i++)
     {
       int _height = int(random(MapValues.Height));
       int _width = int(random(MapValues.Width));
-      
+  
       area[_height][_width].Grow();
     }
     
@@ -110,6 +122,11 @@ class Map
       {
         SpillOver(area[i][j], GetSurroundingCells(i,j));
       }
+    }
+
+    for(Plant plant : plants)
+    {
+      plant.Tick(area[plant.Height][plant.Width]);
     }
     
     
@@ -129,24 +146,22 @@ class Map
     {
       return;
     }
-    float amountToSpill = overflowingCell.TotalNutrients() - overflowingCell.maxNutrients;
-    overflowingCell.RemoveNutrients(amountToSpill);
+    int overflowingNutrient = overflowingCell.GetOverflowingNutrient();
+    float amountToSpill = overflowingCell.TotalNutrients() - overflowingCell.Total_Max_Nutrients();
+    try
+    {
+      overflowingCell.RemoveNutrients(overflowingNutrient, amountToSpill);
+    }
+    catch(Exception e)
+    {
+      return;
+    }
     Cell cell;
-    for(int i = 0; i < cellList.size(); i ++)
+    for(int i = 0; i < cellList.size(); i ++) //<>//
     {
       cell = cellList.get(i);
-      switch(int(random(3)))
-      {
-        case 0:
-        cell.Nutrients.set(Constants.NutrientA, cell.Nutrients.get(Constants.NutrientA) + amountToSpill * (1/cellList.size()));
-        break;
-        case 1:
-        cell.Nutrients.set(Constants.NutrientB, cell.Nutrients.get(Constants.NutrientB) + amountToSpill * (1/cellList.size()));
-        break;
-        case 2:
-        cell.Nutrients.set(Constants.NutrientC, cell.Nutrients.get(Constants.NutrientC) + amountToSpill * (1/cellList.size()));
-        break;
-      }
+
+      cell.Nutrients.add(overflowingNutrient,  amountToSpill * ((float)1/((float)cellList.size()*2))); //<>//
     }
   }
   

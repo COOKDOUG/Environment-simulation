@@ -1,26 +1,51 @@
 class Cell
 {
-  float maxNutrients;
-  
+  FloatList MaxNutrients;
   FloatList Nutrients;
+  float maxNutrientsHolder;
   
+  float Total_Max_Nutrients()
+  {
+    if(maxNutrientsHolder == 0)
+    {
+      for(float number : MaxNutrients)
+      {
+        maxNutrientsHolder += number;
+      }
+    }
+    return maxNutrientsHolder;
+  }
   
+  boolean CanAddNutrient(int nutrient)
+  {
+    if (Nutrients.get(nutrient) < (2* MaxNutrients.get(nutrient)))
+    {
+      return true;
+    }
+    
+    return false;
+  }
   
   Cell()
   {
-    maxNutrients = random(3,5);
+    MaxNutrients = new FloatList();
+    MaxNutrients.append(random(3,5));
+    MaxNutrients.append(random(3,5));
+    MaxNutrients.append(random(3,5));
     Nutrients = new FloatList();
     for(int i = 0; i < 3; i ++)
     {
-      Nutrients.append(random(maxNutrients - TotalNutrients()));
+      Nutrients.append(random(MaxNutrients.get(i) - TotalNutrients()));
     }
     Nutrients.shuffle();
+
+    maxNutrientsHolder = 0;
   }
   
   int ToAlphaValue(float nutrient)
   {
     float returnHolder = 256 * nutrient;
-    return round(returnHolder / maxNutrients);
+    return round(returnHolder / Total_Max_Nutrients());
   }
   
   float TotalNutrients()
@@ -35,7 +60,7 @@ class Cell
   
   boolean isOverflowing()
   {
-    return maxNutrients < TotalNutrients();
+    return Total_Max_Nutrients() < TotalNutrients();
   }
   
   void Grow()
@@ -44,7 +69,7 @@ class Cell
     
     if(holder == 4)
     {
-      if(TotalNutrients() <= maxNutrients)
+      if(TotalNutrients() <= Total_Max_Nutrients())
       {
         if (Nutrients.get(Constants.NutrientA) > Nutrients.get(Constants.NutrientB) && Nutrients.get(Constants.NutrientA) > Nutrients.get(Constants.NutrientC))
         {
@@ -62,39 +87,38 @@ class Cell
     }
   }
   
-  void RemoveNutrients(float removeAmount)
+  void RemoveNutrients(int nutrient, float removeAmount) throws Exception
   {
-    float removePart;
-    
-    if(removeAmount > 1)
+    //take the given amount from the given nutrient
+    if(this.Nutrients.get(nutrient) >= removeAmount)
     {
-      removePart = random(removeAmount);
+      this.Nutrients.sub(nutrient, removeAmount);
     }
     else
     {
-      removePart = removeAmount;
+      throw new Exception("Can't remove more than a cell has.");
     }
-    switch(int(random(3)))
+  }
+  
+  int GetOverflowingNutrient()
+  {
+    IntList indexHolder = new IntList();
+    for(int i =0; i < 3; i ++)
     {
-      case 0:
-        if(removePart < Nutrients.get(Constants.NutrientA))
-        {
-          Nutrients.set(Constants.NutrientA, Nutrients.get(Constants.NutrientA) - removePart);
-        }
-      break;
-      case 1:
-        if(removePart < Nutrients.get(Constants.NutrientB))
-        {
-          Nutrients.set(Constants.NutrientB, Nutrients.get(Constants.NutrientB) - removePart);
-        }
-      break;
-      case 2:
-        if(removePart < Nutrients.get(Constants.NutrientC))
-        {
-          Nutrients.set(Constants.NutrientC, Nutrients.get(Constants.NutrientC) - removePart);
-        }
-      break;
+      if(this.Nutrients.get(i) > this.MaxNutrients.get(i))
+      {
+        indexHolder.append(i);
+      }
     }
-    removeAmount -= removePart;
+    
+    if(indexHolder.size() != 0)
+    {
+      indexHolder.shuffle();
+      return indexHolder.get(0);
+    }
+    else 
+    {
+      return -1;
+    }
   }
 }
