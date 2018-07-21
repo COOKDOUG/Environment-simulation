@@ -3,7 +3,7 @@ class Map
   static final int NumOfCreatures = 100;
   Cell[][] area;
   
-  ArrayList<Creature> creatures;
+  ArrayList<ICreature> creatures; //<>//
   
   void PopulateMap()
   {
@@ -16,10 +16,13 @@ class Map
       }
     }
     
-    creatures = new ArrayList<Creature>();
+    creatures = new ArrayList<ICreature>();
     for(int i = 0; i < NumOfCreatures; i ++)
     {
-      creatures.add(new Creature(int(random(MapValues.Height)), int(random(MapValues.Width)), MapValues.BreedingCooldown));
+      int spawnHeight = int(random(MapValues.Height));
+      int spawnWidth = int(random(MapValues.Width));
+      println("Spawn Location:" + spawnHeight + "," + spawnWidth);
+      creatures.add(new Cow(spawnHeight, spawnWidth, MapValues.BreedingCooldown));
     }
   }
   
@@ -33,13 +36,13 @@ class Map
       }
     }
     
-    Creature animal;
+    ICreature animal;
     for(int i = 0; i < creatures.size(); i ++)
     {
       animal = creatures.get(i);
       if(animal != null)
       {
-        animal.Draw();
+        ((Cow)animal).Draw();
       }
     }
   }
@@ -57,9 +60,9 @@ class Map
       PopulateMap();
     }
 
-    Creature animal;
-    Creature compare;
-    ArrayList<Creature> creaturesHolder = new ArrayList<Creature>();
+    ICreature animal;
+    ICreature compare;
+    ArrayList<ICreature> creaturesHolder = new ArrayList<ICreature>();
     for(int i = 0; i < creatures.size(); i ++)
     {
       animal = creatures.get(i);
@@ -68,9 +71,9 @@ class Map
         if (j != i)
         {
           compare = creatures.get(j);
-          if(compare._height == animal._height && compare._width == animal._width)
+          if(compare.Get_height() == animal.Get_height() && compare.Get_width() == animal.Get_width())
           {
-            Creature breedHolder = animal.Breed(compare);
+            ICreature breedHolder = (animal).Breed(compare);
             if(breedHolder != null)
             {
               creaturesHolder.add(breedHolder);
@@ -80,15 +83,15 @@ class Map
       }
       if(animal != null)
       {
-        animal.Tick(area[animal._height][animal._width]);
-        if(animal.isDead() && animal.nutrient==0)
+        ((ICreature)animal).Tick(area[animal.Get_height()][animal.Get_width()]);
+        if(((ICreature)animal).isDead() && animal.Get_nutrient()==0)
         {
           RunStatistics.Deaths += 1;
           creatures.remove(i);
         }
       }
     }
-    for(Creature creature: creaturesHolder)
+    for(ICreature creature: creaturesHolder)
     {
       creatures.add(creature);
     }

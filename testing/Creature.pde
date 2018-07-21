@@ -1,47 +1,91 @@
-class Creature
+class Cow extends Creature implements ICreature 
 {
-  int apetite;
-  float hunger;
-  float nutrient;
+    int Get_apetite()
+    {return apetite;}
+    void Set_apetite(int value)
+    {apetite = value;}
+    float Get_hunger()
+    {return hunger;}
+    void Set_hunger(float value)
+    {hunger = value;}
+    float Get_nutrient()
+    {return nutrient;}
+    void Set_nutrient(float value)
+    {nutrient = value;}
+    
+    int Get_height()
+    {return _height;}
+    void Set_height(int value)
+    {_height = value;}
+    int Get_width()
+    {return _width;}
+    void Set_width(int value)
+    {_width = value;}
+    
+    int Get_color1()
+    {return color1;}
+    void Set_color1(int value)
+    {color1 = value;}
+    int Get_color2()
+    {return color2;}
+    void Set_color2(int value)
+    {color2 = value;}
+    int Get_color3()
+    {return color3;}
+    void Set_color3(int value)
+    {color3 = value;}
+    
+    int Get_stepsToDeath()
+    {return stepsToDeath;}
+    void Set_stepsToDeath(int value)
+    {stepsToDeath = value;}
+    int Get_breedingCooldown()
+    {return breedingCooldown;}
+    void Set_breedingCooldown(int value)
+    {breedingCooldown = value;}
   
-  int _height;
-  int _width;
+  Cow(int Height, int Width, int breedCooldown)
+  {
+    Init(Height, Width, breedCooldown);
+  }
   
-  int color1;
-  int color2;
-  int color3;
+  private Cow()
+  {}
   
-  final int healthBarWidth = 20;
-  
-  final int DeathCounter = 100;
-  
-  int stepsToDeath;
-  int breedingCooldown;
-  
-  Creature(int Height, int Width, int breedCooldown)
+  void Init(int Height, int Width, int breedCooldown)
   {
     apetite = (int)random(3);
     hunger = random(.2,1);
     
-    _height = Height;
-    _width = Width;
+    Set_height(Height);
+    Set_width(Width);
     
-    color1 = 256;//round(random(256));
-    color2 = 256;//round(random(256));
-    color3 = 256;//round(random(256));
+    Set_color1(256);//round(random(256));
+    Set_color2(256);//round(random(256));
+    Set_color3(256);//round(random(256));
     
-    stepsToDeath = DeathCounter;
-    breedingCooldown = breedCooldown;
+    Set_stepsToDeath(DeathCounter);
+    Set_breedingCooldown(breedCooldown);
   }
   
-  int GetHeight()
-  {
-    return _height;
-  }
-  
-  int GetWidth()
-  {
-    return _width;
+  public <T extends ICreature> T NewCreature(int Height, int Width, int breedCooldown) //<>//
+  { //<>//
+    println("Height " + Height); //<>//
+    println("Width " + Width); //<>//
+    Cow holder = new Cow(); //<>//
+    holder.apetite = (int)random(3); //<>//
+    holder.hunger = random(.2,1);
+    
+    holder.Set_height(Height);
+    holder.Set_width(Width);
+    
+    holder.Set_color1(256);//round(random(256));
+    holder.Set_color2(256);//round(random(256));
+    holder.Set_color3(256);//round(random(256));
+    
+    holder.Set_stepsToDeath(DeathCounter);
+    holder.Set_breedingCooldown(breedCooldown);
+    return (T)holder;
   }
   
   boolean Eat(Cell cell)
@@ -189,7 +233,7 @@ class Creature
       nutrient = nutrient - amountToAdd;
     }
     
-    switch(int(random(3)))
+    switch(apetite)
     {
       case 0:
         cell.nutrientC += amountToAdd;
@@ -244,16 +288,18 @@ class Creature
     return stepsToDeath <= 0;
   }
   
-  Creature Breed(Creature creature)
+  ICreature Breed(ICreature creature)
   {
+    Cow holder = (Cow)creature;
     if(breedingCooldown == 0)
     {
       RunStatistics.BirthChances += 1;
       if(int(random(20)) == 1)
       {
         breedingCooldown = MapValues.BreedingCooldown;
+        holder.breedingCooldown = MapValues.BreedingCooldown;
         RunStatistics.Births += 1;
-        return new Creature(creature._height, creature._width, MapValues.BreedingCooldown);
+        return NewCreature(holder.Get_height(), holder.Get_width(), MapValues.BreedingCooldown);
       }
     }
     

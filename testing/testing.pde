@@ -24,7 +24,7 @@ void draw()
 { 
   if(!isPaused)
   {
-    mapHolder.RunSimulation(10);
+    //mapHolder.RunSimulation(10);
     mapHolder.Tick();
   }
   
