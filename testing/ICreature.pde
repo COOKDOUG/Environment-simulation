@@ -28,11 +28,13 @@ interface ICreature
     int Get_breedingCooldown();
     void Set_breedingCooldown(int value);
 
+    boolean IsHungry();
+
     int healthBarWidth = 20;
   
     int DeathCounter = 100;
 
-     <T extends ICreature> T NewCreature(int Height, int Width, int breedingCD);
+     <T extends Creature> T NewCreature(int Height, int Width, int breedingCD);
     boolean Eat(Cell cell);
     void Move();
     void Tick(Cell cell);
@@ -47,6 +49,7 @@ abstract class Creature implements ICreature
   int apetite;
   float hunger;
   FloatList Nutrients;
+  float hungryLevel;
   
   int _height;
   int _width;
@@ -57,4 +60,14 @@ abstract class Creature implements ICreature
   
   int stepsToDeath;
   int breedingCooldown;
+
+  int A_Min_Healthy;
+  int A_Max_Healthy;
+  int B_Min_Healthy;
+  int B_Max_Healthy;
+  int C_Min_Healthy;
+  int C_Max_Healthy;
+
+  int MaxHealth;
+  int CurrentHealth;
 }

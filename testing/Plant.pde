@@ -26,7 +26,7 @@ abstract class Plant
     private void Init()
     {
       ResourceProduced = int(random(3));
-      ProductionAmount = random(10);
+      ProductionAmount = random(50);
       ProductionCooldown = int(random(Constants.PlantCDMin, Constants.PlantCDMax +1)); 
       prodCD = ProductionCooldown;
     }

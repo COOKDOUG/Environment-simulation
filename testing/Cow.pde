@@ -1,5 +1,6 @@
 class Cow extends Creature implements ICreature 
 {
+    boolean _canEatHere; 
     int Get_apetite()
     {return apetite;}
     void Set_apetite(int value)
@@ -51,6 +52,15 @@ class Cow extends Creature implements ICreature
     {return breedingCooldown;}
     void Set_breedingCooldown(int value)
     {breedingCooldown = value;}
+    
+    boolean IsHungry()
+    {
+      if(Get_Total_Nutrients() < hungryLevel)
+      {
+        return true;
+      }
+      return false;
+    }
   
   Cow(int Height, int Width)
   {
@@ -83,24 +93,36 @@ class Cow extends Creature implements ICreature
     
     Set_stepsToDeath(DeathCounter);
     Set_breedingCooldown(breedCooldown);
+    hungryLevel = random(35,40);
     Nutrients = new FloatList(3);
     Nutrients.append(0);
     Nutrients.append(0);
     Nutrients.append(0);
+    _canEatHere = true;
+
+    A_Min_Healthy = int(random(15));
+    A_Max_Healthy = int(random(A_Min_Healthy, A_Min_Healthy + 30));
+    B_Min_Healthy = int(random(15));
+    B_Max_Healthy = int(random(B_Min_Healthy, B_Min_Healthy + 30));
+    C_Min_Healthy = int(random(15));
+    C_Max_Healthy = int(random(C_Min_Healthy, C_Min_Healthy + 30));
+
+    MaxHealth = 200;
+    CurrentHealth = MaxHealth;
   }
   
-  public <T extends ICreature> T NewCreature(int Height, int Width, int breedCooldown) //<>//
-  { //<>// //<>// //<>//
-    Cow holder = new Cow(); //<>//
-    holder.apetite = (int)random(3); //<>//
+  public <T extends Creature> T NewCreature(int Height, int Width, int breedCooldown)
+  {
+    Cow holder = new Cow();
+    holder.apetite = (int)random(3);
     holder.hunger = random(.2,1);
     
     holder.Set_height(Height);
     holder.Set_width(Width);
     
-    holder.Set_color1(256);//round(random(256));
-    holder.Set_color2(256);//round(random(256));
-    holder.Set_color3(256);//round(random(256));
+    holder.Set_color1(256);
+    holder.Set_color2(256);
+    holder.Set_color3(256);
     
     holder.Set_stepsToDeath(DeathCounter);
     holder.Set_breedingCooldown(breedCooldown);
@@ -109,6 +131,8 @@ class Cow extends Creature implements ICreature
     holder.Nutrients.append(0);
     holder.Nutrients.append(0);
     holder.Nutrients.append(0);
+    
+    _canEatHere = true;
     return (T)holder;
   }
   
@@ -149,50 +173,21 @@ class Cow extends Creature implements ICreature
       return false;
     }
     boolean result;
-    switch(apetite)
+
+    if(cell.Nutrients.get(this.apetite) > hunger)
     {
-      case 0:
-        if(cell.Nutrients.get(Constants.NutrientA) > hunger)
-        {
-          cell.Nutrients.set(Constants.NutrientA, cell.Nutrients.get(Constants.NutrientA) - hunger);
-          result = true;
-        }
-        else
-        {
-          result = false;
-        }
-        break;
-    case 1:
-      if(cell.Nutrients.get(Constants.NutrientB) > hunger)
-        {
-          cell.Nutrients.set(Constants.NutrientB, cell.Nutrients.get(Constants.NutrientB) - hunger);
-          result = true;
-        }
-        else
-        {
-          result = false;
-        }
-        break;
-    case 2:
-      if(cell.Nutrients.get(Constants.NutrientC) > hunger)
-        {
-          cell.Nutrients.set(Constants.NutrientC, cell.Nutrients.get(Constants.NutrientC) - hunger);
-          result = true;
-        }
-        else
-        {
-          result = false;
-        }
-        break;
-    default:
-      result = false;
-      break;
+      cell.Nutrients.add(this.apetite, -1 * hunger);
+      result = true;
     }
+    else
+    {
+      result = false;
+    }
+
     if(result == true)
     {
       //put eaten stuff into random nutrient
-      int randomNutrient = int(random(3));
-      Add_nutrients(randomNutrient, hunger);
+      this.Nutrients.add(int(random(3)), hunger);
       RunStatistics.EatAmount += hunger;
       if(stepsToDeath < DeathCounter)
       {
@@ -253,9 +248,17 @@ class Cow extends Creature implements ICreature
       {
         breedingCooldown --;
       }
-      if(Eat(cell))
+      if(IsHungry() && _canEatHere)
       {
-        Poop(cell);
+        if(Eat(cell))
+        {
+          _canEatHere = true;
+          Poop(cell);
+        }
+        else
+        {
+          _canEatHere = false;
+        }
       }
       else
       {
@@ -288,20 +291,6 @@ class Cow extends Creature implements ICreature
       }
       
       cell.Nutrients.set(i, cell.Nutrients.get(i) + amountToAdd);
-      // switch(apetite)
-      // {
-      //   case 0:
-      //     cell.Nutrients.set(Constants.NutrientC, cell.Nutrients.get(Constants.NutrientC)+ amountToAdd);
-      //     break;
-        
-      //   case 1:
-      //     cell.Nutrients.set(Constants.NutrientA, cell.Nutrients.get(Constants.NutrientA)+ amountToAdd);
-      //     break;
-        
-      //   case 2:
-      //     cell.Nutrients.set(Constants.NutrientB, cell.Nutrients.get(Constants.NutrientB)+ amountToAdd);
-      //     break;
-      // }
     }
   }
   
