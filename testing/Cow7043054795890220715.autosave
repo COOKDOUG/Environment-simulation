@@ -49,9 +49,9 @@ class Cow extends Creature implements ICreature
     void Set_stepsToDeath(int value)
     {stepsToDeath = value;}
     int Get_breedingCooldown()
-    {return BreedingCooldown;}
+    {return breedingCooldown;}
     void Set_breedingCooldown(int value)
-    {BreedingCooldown = value;}
+    {breedingCooldown = value;}
     
     boolean IsHungry()
     {
@@ -74,14 +74,7 @@ class Cow extends Creature implements ICreature
   {
     Init(cow1.Get_height(),cow1.Get_width(), MapValues.BreedingCooldown);
     hunger = (cow1.Get_hunger() + cow2.Get_hunger()) / 2;
-    MoveCost = (cow1.MoveCost + cow2.MoveCost)/2f + random(-.2, .2);
-    BreedingChance = (cow1.BreedingChance + cow2.BreedingChance)/2f + random(-.001, .001);
-    float hungrySum = (cow1.hungryLevel + cow2.hungryLevel);
-    hungryLevel = hungrySum/2f + random((-1 * random(0,.05) * hungrySum), (random(0,.05) * hungrySum));
-
-    //Average the OldAges of the animals and add a random range
-    int oldAgeSum = (cow1.OldAge + cow2.OldAge);
-    OldAge = (oldAgeSum/2 + int(random((-1 * random(0,.02) * oldAgeSum), (random(0,.02) * oldAgeSum))));
+    MoveCost = (cow1.MoveCost + cow2.MoveCost)/2f;
     Set_color1(int(random(128,250)));
     Set_color2(int(random(128,250)));
     Set_color3(int(random(128,250)));
@@ -117,13 +110,12 @@ class Cow extends Creature implements ICreature
 
     MaxHealth = 200;
     CurrentHealth = MaxHealth;
-    MoveCost = random(0.01, 0.3);
+    MoveCost = random(0.01, 0.15);
 
     TimeAlive = 0;
     ChildrenSpawned = 0;
     TimeInHealthyZone = 0;
-    BreedingChance = random(0f,.03f);
-    OldAge = int(random(8000,10000));
+    BreedingChance = random(0f,.25f);
   }
   
   public <T extends Creature> T NewCreature(int Height, int Width, int breedCooldown)
@@ -309,15 +301,6 @@ class Cow extends Creature implements ICreature
         this.CurrentHealth = this.MaxHealth;
       }
     }
-    if(this.TimeAlive > this.OldAge)
-    {
-      int decreaseBy = 4;
-      if(this.TimeAlive > (this.OldAge * 1.5))
-      {
-        decreaseBy = 6;
-      }
-      this.CurrentHealth -= decreaseBy;
-    }
   }
 
   void Tick(Cell cell)
@@ -326,9 +309,9 @@ class Cow extends Creature implements ICreature
     if(!isDead())
     {
       this.TimeAlive ++;
-      if(BreedingCooldown > 0)
+      if(breedingCooldown > 0)
       {
-        BreedingCooldown --;
+        breedingCooldown --;
       }
       if(IsHungry() && _canEatHere)
       {
@@ -418,13 +401,13 @@ class Cow extends Creature implements ICreature
   ICreature Breed(ICreature creature)
   {
     Cow holder = (Cow)creature;
-    if(BreedingCooldown == 0)
+    if(breedingCooldown == 0)
     {
       RunStatistics.BirthChances += 1;
-      if(random(1) <= (holder.BreedingChance + ((1 - holder.BreedingChance) * this.BreedingChance)))
+      if(int(random(1)) <= (holder.BreedingChance + ((1 - holder.BreedingChance) * this.BreedingChance)))
       {
-        this.BreedingCooldown = MapValues.BreedingCooldown;
-        holder.BreedingCooldown = MapValues.BreedingCooldown;
+        breedingCooldown = MapValues.BreedingCooldown;
+        holder.breedingCooldown = MapValues.BreedingCooldown;
         ChildrenSpawned ++;
         holder.ChildrenSpawned ++;
         RunStatistics.Births += 1;

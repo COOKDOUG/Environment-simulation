@@ -42,6 +42,8 @@ interface ICreature
     void Draw();
     boolean isDead();
     ICreature Breed(ICreature creature);
+    int Suitability();
+    String ToString();
 }
 
 abstract class Creature implements ICreature
@@ -59,7 +61,9 @@ abstract class Creature implements ICreature
   int color3;
   
   int stepsToDeath;
-  int breedingCooldown;
+  int BreedingCooldown;
+  float BreedingChance;
+  int OldAge;
 
   int A_Min_Healthy;
   int A_Max_Healthy;
@@ -72,4 +76,10 @@ abstract class Creature implements ICreature
   int CurrentHealth;
   
   float MoveCost;
+  int FitnessScore;
+
+  int TimeAlive;
+  int ChildrenSpawned;
+  int TimeInHealthyZone;
+
 }
