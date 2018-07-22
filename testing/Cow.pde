@@ -72,8 +72,6 @@ class Cow extends Creature
     hunger = (cow1.Get_hunger() + cow2.Get_hunger()) / 2;
     MoveCost = (cow1.MoveCost + cow2.MoveCost)/2f + random(-.2, .2);
     BreedingChance = (cow1.BreedingChance + cow2.BreedingChance)/2f + random(-.001, .001);
-    float hungrySum = (cow1.hungryLevel + cow2.hungryLevel);
-    hungryLevel = hungrySum/2f + random((-1 * random(0,.05) * hungrySum), (random(0,.05) * hungrySum));
 
     //Average the OldAges of the animals and add a random range
     int oldAgeSum = (cow1.OldAge + cow2.OldAge);
@@ -114,7 +112,6 @@ class Cow extends Creature
     Set_color3(256);//round(random(256));
     
     Set_breedingCooldown(breedCooldown);
-    hungryLevel = random(35,40);
     Nutrients = new FloatList(3);
     Nutrients.append(0);
     Nutrients.append(0);
@@ -127,6 +124,8 @@ class Cow extends Creature
     B_Max_Healthy = int(random(B_Min_Healthy, B_Min_Healthy + 30));
     C_Min_Healthy = int(random(15));
     C_Max_Healthy = int(random(C_Min_Healthy, C_Min_Healthy + 30));
+
+    hungryLevel = ((A_Min_Healthy + A_Max_Healthy) /2f) + ((B_Min_Healthy + B_Max_Healthy) /2f) + ((C_Min_Healthy + C_Max_Healthy) /2f);
 
     MaxHealth = 200;
     CurrentHealth = MaxHealth;

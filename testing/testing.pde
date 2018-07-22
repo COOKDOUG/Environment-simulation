@@ -14,9 +14,9 @@ void setup()
   MapValues.Init(width/cellSize,
     height / cellSize,
     cellSize,
-    40,//Breeding CD
-    40,//Creatures
-    20);//Plants
+    30,//Breeding CD
+    100,//Creatures
+    30);//Plants
   mapHolder = new Map();
   mapHolder.PopulateMap();
 
@@ -63,10 +63,20 @@ void keyPressed() {
     }
     else if(keyCode ==DOWN)
     {
-      if(this.accelerateMultiplier > 0)
-      {
-        this.accelerateMultiplier --;
-      }
+      this.accelerateMultiplier --;
+    }
+    else if(keyCode == RIGHT)
+    {
+      this.accelerateMultiplier += 10;
+    }
+    else if(keyCode == LEFT)
+    {
+      this.accelerateMultiplier -= 10;
+    }
+
+    if(this.accelerateMultiplier < 0)
+    {
+      this.accelerateMultiplier = 0;
     }
   }
 }
