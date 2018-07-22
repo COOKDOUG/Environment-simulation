@@ -5,4 +5,6 @@ static class RunStatistics
   static int Deaths;
   static float PoopAmount;
   static float EatAmount;
+  static int Ticks;
+  static int Generations;
 }

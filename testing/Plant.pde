@@ -26,7 +26,7 @@ abstract class Plant
     private void Init()
     {
       ResourceProduced = int(random(3));
-      ProductionAmount = random(10);
+      ProductionAmount = random(50);
       ProductionCooldown = int(random(Constants.PlantCDMin, Constants.PlantCDMax +1)); 
       prodCD = ProductionCooldown;
     }
@@ -35,9 +35,8 @@ abstract class Plant
     {
       if(prodCD <= 0)
       {
-        if(true)//cell.CanAddNutrient(ResourceProduced))
+        if(cell.CanAddNutrient(ResourceProduced))
         {
-          println(ProductionAmount);
           cell.Nutrients.add(ResourceProduced, ProductionAmount);
           prodCD = ProductionCooldown;
         }

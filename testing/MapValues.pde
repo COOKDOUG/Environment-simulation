@@ -4,12 +4,21 @@ static class MapValues
   static int Width;
   static int CellSize;
   static int BreedingCooldown;
+  static int NumOfCreatures;
+  static int NumOfPlants;
   
-  public MapValues(int _height, int _width, int cellSize, int breedingCD)
+  public static void Init(int _height, 
+    int _width, 
+    int cellSize,
+    int breedingCD,
+    int numOfCreatures,
+    int numOfPlants)
   {
-    Height = _height;
-    Width = _width;
-    CellSize = cellSize;
-    BreedingCooldown = breedingCD;
+    MapValues.Height = _height;
+    MapValues.Width = _width;
+    MapValues.CellSize = cellSize;
+    MapValues.BreedingCooldown = breedingCD;
+    MapValues.NumOfCreatures = numOfCreatures;
+    MapValues.NumOfPlants = numOfPlants;
   }
 }
