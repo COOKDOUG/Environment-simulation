@@ -86,16 +86,19 @@ class Cow extends Creature
     int C_min_sum = cow1.C_Min_Healthy + cow2.C_Min_Healthy;
     int C_max_sum = cow1.C_Max_Healthy + cow2.C_Max_Healthy;
 
-    A_Min_Healthy = A_min_sum;
-    A_Max_Healthy = A_max_sum;
-    B_Min_Healthy = B_min_sum;
-    B_Max_Healthy = B_max_sum;
-    C_Min_Healthy = C_min_sum;
-    C_Max_Healthy = C_max_sum;
+    A_Min_Healthy = A_min_sum/2 + int(random((-1 * A_min_sum * .005),(A_min_sum * .005)));
+    A_Max_Healthy = A_max_sum/2 + int(random((-1 * A_min_sum * .005),(A_min_sum * .005)));
+    B_Min_Healthy = B_min_sum/2 + int(random((-1 * B_min_sum * .005),(B_min_sum * .005)));
+    B_Max_Healthy = B_max_sum/2 + int(random((-1 * B_min_sum * .005),(B_min_sum * .005)));
+    C_Min_Healthy = C_min_sum/2 + int(random((-1 * C_min_sum * .005),(C_min_sum * .005)));
+    C_Max_Healthy = C_max_sum/2 + int(random((-1 * C_min_sum * .005),(C_min_sum * .005)));
 
-    Set_color1(int(random(128,250)));
-    Set_color2(int(random(128,250)));
-    Set_color3(int(random(128,250)));
+    float eatEfficiencySum = cow1.EatEfficiency + cow2.EatEfficiency;
+    EatEfficiency = eatEfficiencySum/2f + (random((-1 * eatEfficiencySum * .005),(eatEfficiencySum * .005)));
+    if(EatEfficiency > 1)
+    {
+      EatEfficiency = 1;
+    }
   }
   
   void Init(int Height, int Width, int breedCooldown)
@@ -134,6 +137,7 @@ class Cow extends Creature
     TimeInHealthyZone = 0;
     BreedingChance = random(0f,.03f);
     OldAge = int(random(8000,10000));
+    EatEfficiency = random(.2,1);
   }
   
   public <T extends Creature> T NewCreature(int Height, int Width, int breedCooldown)
@@ -211,7 +215,7 @@ class Cow extends Creature
     if(result == true)
     {
       //put eaten stuff into random nutrient
-      this.Nutrients.add(int(random(3)), hunger);
+      this.Nutrients.add(int(random(3)), hunger * EatEfficiency);
       RunStatistics.EatAmount += hunger;
     }
 
