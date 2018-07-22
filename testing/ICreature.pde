@@ -23,8 +23,6 @@ interface ICreature
     int Get_color3();
     void Set_color3(int value);
     
-    int Get_stepsToDeath();
-    void Set_stepsToDeath(int value);
     int Get_breedingCooldown();
     void Set_breedingCooldown(int value);
 
@@ -34,7 +32,7 @@ interface ICreature
   
     int DeathCounter = 100;
 
-     <T extends Creature> T NewCreature(int Height, int Width, int breedingCD);
+    <T extends Creature> T NewCreature(int Height, int Width, int breedingCD);
     boolean Eat(Cell cell);
     void Move();
     void Tick(Cell cell);
@@ -60,10 +58,11 @@ abstract class Creature implements ICreature
   int color2;
   int color3;
   
-  int stepsToDeath;
-  int BreedingCooldown;
+  //Genome
+  int   BreedingCooldown;
   float BreedingChance;
-  int OldAge;
+  int   OldAge;
+  float EatEfficiency;
 
   int A_Min_Healthy;
   int A_Max_Healthy;
@@ -81,5 +80,6 @@ abstract class Creature implements ICreature
   int TimeAlive;
   int ChildrenSpawned;
   int TimeInHealthyZone;
+  boolean DeadFlag;
 
 }
