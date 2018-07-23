@@ -1,4 +1,4 @@
-class Cow extends Creature implements ICreature 
+class Cow extends Creature
 {
     boolean _canEatHere; 
     int Get_apetite()
@@ -44,10 +44,6 @@ class Cow extends Creature implements ICreature
     void Set_color3(int value)
     {color3 = value;}
     
-    int Get_stepsToDeath()
-    {return stepsToDeath;}
-    void Set_stepsToDeath(int value)
-    {stepsToDeath = value;}
     int Get_breedingCooldown()
     {return BreedingCooldown;}
     void Set_breedingCooldown(int value)
@@ -76,15 +72,31 @@ class Cow extends Creature implements ICreature
     hunger = (cow1.Get_hunger() + cow2.Get_hunger()) / 2;
     MoveCost = (cow1.MoveCost + cow2.MoveCost)/2f + random(-.2, .2);
     BreedingChance = (cow1.BreedingChance + cow2.BreedingChance)/2f + random(-.001, .001);
-    float hungrySum = (cow1.hungryLevel + cow2.hungryLevel);
-    hungryLevel = hungrySum/2f + random((-1 * random(0,.05) * hungrySum), (random(0,.05) * hungrySum));
 
     //Average the OldAges of the animals and add a random range
     int oldAgeSum = (cow1.OldAge + cow2.OldAge);
     OldAge = (oldAgeSum/2 + int(random((-1 * random(0,.02) * oldAgeSum), (random(0,.02) * oldAgeSum))));
-    Set_color1(int(random(128,250)));
-    Set_color2(int(random(128,250)));
-    Set_color3(int(random(128,250)));
+
+    int A_min_sum = cow1.A_Min_Healthy + cow2.A_Min_Healthy;
+    int A_max_sum = cow1.A_Max_Healthy + cow2.A_Max_Healthy;
+    int B_min_sum = cow1.B_Min_Healthy + cow2.B_Min_Healthy;
+    int B_max_sum = cow1.B_Max_Healthy + cow2.B_Max_Healthy;
+    int C_min_sum = cow1.C_Min_Healthy + cow2.C_Min_Healthy;
+    int C_max_sum = cow1.C_Max_Healthy + cow2.C_Max_Healthy;
+
+    A_Min_Healthy = A_min_sum/2 + int(random((-1 * A_min_sum * .005),(A_min_sum * .005)));
+    A_Max_Healthy = A_max_sum/2 + int(random((-1 * A_min_sum * .005),(A_min_sum * .005)));
+    B_Min_Healthy = B_min_sum/2 + int(random((-1 * B_min_sum * .005),(B_min_sum * .005)));
+    B_Max_Healthy = B_max_sum/2 + int(random((-1 * B_min_sum * .005),(B_min_sum * .005)));
+    C_Min_Healthy = C_min_sum/2 + int(random((-1 * C_min_sum * .005),(C_min_sum * .005)));
+    C_Max_Healthy = C_max_sum/2 + int(random((-1 * C_min_sum * .005),(C_min_sum * .005)));
+
+    float eatEfficiencySum = cow1.EatEfficiency + cow2.EatEfficiency;
+    EatEfficiency = eatEfficiencySum/2f + (random((-1 * eatEfficiencySum * .005),(eatEfficiencySum * .005)));
+    if(EatEfficiency > 1)
+    {
+      EatEfficiency = 1;
+    }
   }
   
   void Init(int Height, int Width, int breedCooldown)
@@ -99,9 +111,7 @@ class Cow extends Creature implements ICreature
     Set_color2(256);//round(random(256));
     Set_color3(256);//round(random(256));
     
-    Set_stepsToDeath(DeathCounter);
     Set_breedingCooldown(breedCooldown);
-    hungryLevel = random(35,40);
     Nutrients = new FloatList(3);
     Nutrients.append(0);
     Nutrients.append(0);
@@ -115,6 +125,8 @@ class Cow extends Creature implements ICreature
     C_Min_Healthy = int(random(15));
     C_Max_Healthy = int(random(C_Min_Healthy, C_Min_Healthy + 30));
 
+    hungryLevel = ((A_Min_Healthy + A_Max_Healthy) /2f) + ((B_Min_Healthy + B_Max_Healthy) /2f) + ((C_Min_Healthy + C_Max_Healthy) /2f);
+
     MaxHealth = 200;
     CurrentHealth = MaxHealth;
     MoveCost = random(0.01, 0.3);
@@ -124,6 +136,7 @@ class Cow extends Creature implements ICreature
     TimeInHealthyZone = 0;
     BreedingChance = random(0f,.03f);
     OldAge = int(random(8000,10000));
+    EatEfficiency = random(.2,1);
   }
   
   public <T extends Creature> T NewCreature(int Height, int Width, int breedCooldown)
@@ -139,7 +152,6 @@ class Cow extends Creature implements ICreature
     holder.Set_color2(256);
     holder.Set_color3(256);
     
-    holder.Set_stepsToDeath(DeathCounter);
     holder.Set_breedingCooldown(breedCooldown);
     holder.Set_Nutrients(new FloatList(3));
     
@@ -202,17 +214,10 @@ class Cow extends Creature implements ICreature
     if(result == true)
     {
       //put eaten stuff into random nutrient
-      this.Nutrients.add(int(random(3)), hunger);
+      this.Nutrients.add(int(random(3)), hunger * EatEfficiency);
       RunStatistics.EatAmount += hunger;
-      if(stepsToDeath < DeathCounter)
-      {
-        stepsToDeath += 5;
-      }
     }
-    else
-    {
-      stepsToDeath --;
-    }
+
     return result;
   }
   
@@ -412,7 +417,11 @@ class Cow extends Creature implements ICreature
   
   boolean isDead()
   {
-    return CurrentHealth <= 0;
+    if(!DeadFlag)
+    {
+      DeadFlag = CurrentHealth <= 0;
+    }
+    return DeadFlag;
   }
   
   ICreature Breed(ICreature creature)

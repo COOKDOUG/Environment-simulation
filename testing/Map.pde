@@ -76,46 +76,51 @@ class Map
     rect((_height * MapValues.CellSize) + MapValues.CellSize /2, _width * MapValues.CellSize+ MapValues.CellSize /2,MapValues.CellSize,MapValues.CellSize);
   }
   
+  void DoSuitabilityBreeding()
+  {
+    //Create new creatures from the best of the last ones
+    int totalSuitability = 0;
+    FloatList suitabilityRatio = new FloatList();
+    for(ICreature animal : deadCreatures)
+    {
+      int animalSuitability = animal.Suitability();
+      suitabilityRatio.append(animalSuitability);
+      totalSuitability += animalSuitability;
+    }
+
+    suitabilityRatio = suitabilityRatio.getPercent();
+
+    while (creatures.size() < MapValues.NumOfCreatures) 
+    {
+      float selection1 = random(1);
+      float selection2 = random(1);
+
+      int index1 = -1;
+      int index2 = -1;
+
+      for(int i = 0; i < suitabilityRatio.size(); i ++)
+      {
+        selection1 -= suitabilityRatio.get(i);
+        selection2 -= suitabilityRatio.get(i);
+
+        if(selection1 <= 0 && index1 == -1)
+        {
+          index1 = i;
+        }
+        if(selection2 <= 0 && index2 == -1)
+        {
+          index2 = i;
+        }
+      }
+      creatures.add(new Cow((Cow)deadCreatures.get(index1), (Cow)deadCreatures.get(index2)));
+    }
+  }
+  
   void Tick()
   {
     if(creatures.size() == 0)
     {
-      //Create new creatures from the best of the last ones
-      int totalSuitability = 0;
-      FloatList suitabilityRatio = new FloatList();
-      for(ICreature animal : deadCreatures)
-      {
-        int animalSuitability = animal.Suitability();
-        suitabilityRatio.append(animalSuitability);
-        totalSuitability += animalSuitability;
-      }
-
-      suitabilityRatio = suitabilityRatio.getPercent();
-
-      while (creatures.size() < MapValues.NumOfCreatures) 
-      {
-        float selection1 = random(1);
-        float selection2 = random(1);
-
-        int index1 = -1;
-        int index2 = -1;
-
-        for(int i = 0; i < suitabilityRatio.size(); i ++)
-        {
-          selection1 -= suitabilityRatio.get(i);
-          selection2 -= suitabilityRatio.get(i);
-
-          if(selection1 <= 0 && index1 == -1)
-          {
-            index1 = i;
-          }
-          if(selection2 <= 0 && index2 == -1)
-          {
-            index2 = i;
-          }
-        }
-        creatures.add(new Cow((Cow)deadCreatures.get(index1), (Cow)deadCreatures.get(index2)));
-      }
+      DoSuitabilityBreeding();
 
       this.RandomizeArea();
       this.RandomizePlants();
@@ -152,12 +157,12 @@ class Map
         if(((ICreature)animal).isDead() && animal.Get_Total_Nutrients()==0)
         {
           RunStatistics.Deaths += 1;
-          deadCreatures.add(creatures.get(i));
+          deadCreatures.add(creatures.get(i)); //<>//
           creatures.remove(i);
         }
       }
     }
-    for(ICreature creature: creaturesHolder) //<>//
+    for(ICreature creature: creaturesHolder)
     {
       creatures.add(creature);
     }
